@@ -42,8 +42,8 @@
 
         # Binary distribution - fetches pre-built release from GitHub
         # This is much faster than building from source
-        platform-tools-bin = pkgs.stdenv.mkDerivation {
-          pname = "platform-tools-bin";
+        anza-platform-tools = pkgs.stdenv.mkDerivation {
+          pname = "anza-platform-tools";
           inherit version;
 
           src = pkgs.fetchurl {
@@ -191,18 +191,17 @@
       in {
         packages = {
           # Default to binary for speed - source build takes hours
-          default = platform-tools-bin;
-          bin = platform-tools-bin;
+          default = anza-platform-tools;
           source = platform-tools-source;
-          platform-tools = platform-tools-bin;
-          inherit platform-tools-bin platform-tools-source;
+          platform-tools = anza-platform-tools;
+          inherit anza-platform-tools platform-tools-source;
         };
 
         # Development shell with platform-tools available
         devShells.default = pkgs.mkShell {
-          packages = [ platform-tools-bin ];
+          packages = [ anza-platform-tools ];
           shellHook = ''
-            export PATH="${platform-tools-bin}/rust/bin:${platform-tools-bin}/llvm/bin:$PATH"
+            export PATH="${anza-platform-tools}/rust/bin:${anza-platform-tools}/llvm/bin:$PATH"
             echo "Anza platform-tools v${version} available"
             echo "  rustc: $(rustc --version 2>/dev/null || echo 'not found')"
             echo "  cargo: $(cargo --version 2>/dev/null || echo 'not found')"
